@@ -9,6 +9,11 @@ namespace CSharp_Net_module1_2_3_lab
     // 1) declare enumeration CurrencyTypes, values UAH, USD, EU
     enum CurrencyTypes
     {
+                // энумка на практике всегда дожна содеражть нулевым элемнтом какой нибудь Unknown или Unspecified или None
+                // потому что энумку можно парсить со строки
+                // и если не распарсили - 0, т.е. Unknown
+
+        //Unknown
         UAH,
         USD,
         EU
@@ -85,6 +90,7 @@ namespace CSharp_Net_module1_2_3_lab
         // 8) declare overloading of operator true and false to check CurrencyType of object
         public static bool operator true(Money money1)
         {
+            // и автор задания скорее всего предполагал чтоб волюта не была Unknown, т.е. не была 0
             return money1.CurrencyType == (CurrencyTypes)0;
         }
 

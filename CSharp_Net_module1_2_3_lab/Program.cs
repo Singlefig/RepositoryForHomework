@@ -49,8 +49,11 @@ namespace CSharp_Net_module1_2_3_lab
                 Console.WriteLine(money2.CurrencyType);
             }
             // convert 1st object of Money to string
-            string a = (string)money1;
-            Console.WriteLine(a);
+            string strMoney = (string)money1;    //именуем пременные так, что было видно что это. не используем одну букву
+            Console.WriteLine(strMoney);         //  strMoney - венгерская нотация: имя влючает в себя указание на тип
+
+            //и vice versa
+            var money = (Money)strMoney;
         }
     }
 }

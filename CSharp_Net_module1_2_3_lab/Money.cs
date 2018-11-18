@@ -15,19 +15,24 @@ namespace CSharp_Net_module1_2_3_lab
     }
 
 
-
+    //деньги всегда decimal, никогда инт либо дабл
     class Money
     {
         // 2) declare 2 properties Amount, CurrencyType
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
         public CurrencyTypes CurrencyType { get; set; }
-        // 3) declare parameter constructor for properties initialization
         public Money()
         {
-            
+
+        }
+        // 3) declare parameter constructor FOR PROPERTIES INITIALIZATION
+        public Money(decimal amount, CurrencyTypes currencyType)
+        {
+            Amount = amount;
+            CurrencyType = currencyType;
         }
         // 4) declare overloading of operator + to add 2 objects of Money
-        public static int operator +(Money money1,Money money2)
+        public static decimal operator +(Money money1,Money money2)
         {
             if (money1.CurrencyType == money2.CurrencyType)
                 return money1.Amount + money2.Amount;
@@ -35,9 +40,9 @@ namespace CSharp_Net_module1_2_3_lab
                 return -1;
         }
 
-        public static int operator +(Money money1, double money2)
+        public static decimal operator +(Money money1, double money2)
         {
-                return money1.Amount + (int)money2;
+                return money1.Amount + (decimal)money2;
         }
 
         // 5) declare overloading of operator -- to decrease object of Money by 1
@@ -53,7 +58,7 @@ namespace CSharp_Net_module1_2_3_lab
             return money;
         }
         // 6) declare overloading of operator * to increase object of Money 3 times
-        public static int operator *(Money money,int value)
+        public static decimal operator *(Money money,decimal value)
         {
             return money.Amount*value;
         }
@@ -65,7 +70,7 @@ namespace CSharp_Net_module1_2_3_lab
 
         public static bool operator >(Money money1, string money2)
         {
-            return money1.Amount > int.Parse(money2);
+            return money1.Amount > decimal.Parse(money2);
         }
 
         public static bool operator <(Money money1, Money money2)
@@ -75,7 +80,7 @@ namespace CSharp_Net_module1_2_3_lab
 
         public static bool operator <(Money money1, string money2)
         {
-            return money1.Amount < int.Parse(money2);
+            return money1.Amount < decimal.Parse(money2);
         }
         // 8) declare overloading of operator true and false to check CurrencyType of object
         public static bool operator true(Money money1)
@@ -89,15 +94,35 @@ namespace CSharp_Net_module1_2_3_lab
         }
         // 9) declare overloading of implicit/ explicit conversion  to convert Money to double, string and vice versa
         public static explicit operator double(Money d)
-        {
-            double d0 = d.Amount;
-            return d0;
+        {            
+            return (double)d.Amount;
         }
 
         public static explicit operator string(Money d)
         {
-            string a = $"{d.Amount}";
-            return a;
+            //хорошо, но я б еще код валюты включил сюда
+            //string a = $"{d.Amount}";
+            //return a;
+
+            //https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated
+            //такой формат создания строки  - знак доллара и фигурные скобки - интерполяция
+            return $"{d.CurrencyType.ToString()} {d.Amount}";
+
+        }
+
+        public static explicit operator Money(string value)
+        {
+            //мы это не рассматривали, но в задании оно есть
+            // Enum.Parse - механизм приведения строки к енумке: в метод передали тип и строку, на выходе получили object который привели к нужному типу
+            //string.Split() - получения массива стрингов по разделителю (пробел, запятая и т.п.)
+            //value.Split()[0] вернет нам значение до пробела
+            //value.Split()[1] вернет нам значение после пробела
+            string strCur = value.Split()[0];
+            CurrencyTypes currency = (CurrencyTypes)Enum.Parse(typeof(CurrencyTypes), strCur);
+            string strAmount = value.Split()[1];
+            decimal amount = decimal.Parse(strAmount);
+            return new Money(amount, currency);
+
         }
     }
 }
